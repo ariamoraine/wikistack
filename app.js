@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
+const nunjucks = require('nunjucks');
 
 
-// point nunjucks to the directory containing templates and turn off caching; configure returns an Environment 
+// point nunjucks to the directory containing templates and turn off caching; configure returns an Environment
 // instance, which we'll want to use to add Markdown support later.
 var env = nunjucks.configure('views', {noCache: true});
 // have res.render work with html files
@@ -22,5 +23,5 @@ app.use('/', function(req, res, next){
 
 app.get('/', function(req, res, next){
 	res.render('index');
-}),
+});
 
