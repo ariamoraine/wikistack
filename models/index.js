@@ -23,7 +23,13 @@ var Page = db.define('page', {
       return '/wiki/' + this.urlTitle;
     }
   }
-});
+}, {
+    hooks: {
+      beforeValidate: function (page) {
+        page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+      }
+    }
+  });
 
 var User = db.define('user', {
     name: {
