@@ -10,11 +10,20 @@ var env = nunjucks.configure('views', {noCache: true});
 app.set('view engine', 'html');
 // when res.render works with html files, have it use nunjucks to do so
 app.engine('html', nunjucks.render);
+const models = require('./models');
+//const server =
 
+models.User.sync({})
+.then(function () {
+  return models.Page.sync({});
+})
+.then(function () {
+  app.listen(1337, function(){
+	 console.log('listening on port 1337');
+  });
+})
+.catch(console.error);
 
-var server = app.listen(1337, function(){
-	console.log('listening on port 1337');
-});
 
 app.use('/', function(req, res, next){
 	console.log("hi!");
