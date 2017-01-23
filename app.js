@@ -1,17 +1,18 @@
 const express = require('express');
 const app = express();
 const nunjucks = require('nunjucks');
-
-
-// point nunjucks to the directory containing templates and turn off caching; configure returns an Environment
-// instance, which we'll want to use to add Markdown support later.
+var wikiRouter = require('./routes/wiki');
 var env = nunjucks.configure('views', {noCache: true});
-// have res.render work with html files
-app.set('view engine', 'html');
-// when res.render works with html files, have it use nunjucks to do so
-app.engine('html', nunjucks.render);
 const models = require('./models');
-//const server =
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.set('view engine', 'html');
+app.engine('html', nunjucks.render);
+app.use('/wiki/', wikiRouter);
+//app.use('/', bodyParser);
 
 models.User.sync({})
 .then(function () {
@@ -19,16 +20,15 @@ models.User.sync({})
 })
 .then(function () {
   app.listen(1337, function(){
-	 console.log('listening on port 1337');
+   console.log('listening on port 1337');
   });
 })
 .catch(console.error);
 
-
-app.use('/', function(req, res, next){
-	console.log("hi!");
-	next();
-});
+// app.use('/', function(req, res, next){
+// 	console.log(req.body);
+// 	next();
+// });
 
 app.get('/', function(req, res, next){
 	res.render('index');
